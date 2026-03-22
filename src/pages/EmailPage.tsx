@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { MaterialIcon } from '../components/MaterialIcon';
+import { ToastSystem, useToast } from '../components/ToastSystem';
 import { EmailSidebar } from '../components/email/EmailSidebar';
 import { EmailList } from '../components/email/EmailList';
 import { EmailReader } from '../components/email/EmailReader';
@@ -12,6 +13,7 @@ interface EmailPageProps {
 }
 
 export const EmailPage: React.FC<EmailPageProps> = ({ onBack }) => {
+  const { toasts, showToast, dismissToast } = useToast();
   const [emails, setEmails] = useState<Email[]>(mockEmails);
   const [selectedFolder, setSelectedFolder] = useState('inbox');
   const [selectedEmailId, setSelectedEmailId] = useState<string | null>(null);
@@ -94,6 +96,7 @@ export const EmailPage: React.FC<EmailPageProps> = ({ onBack }) => {
       prev.map((e) => (e.id === id ? { ...e, folder: 'spam' as const } : e))
     );
     if (selectedEmailId === id) setSelectedEmailId(null);
+    showToast({ type: 'info', title: 'E-mail movido para spam', autoDismiss: true, duration: 3000 });
   };
 
   const handleDelete = (id: string) => {
@@ -101,6 +104,7 @@ export const EmailPage: React.FC<EmailPageProps> = ({ onBack }) => {
       prev.map((e) => (e.id === id ? { ...e, folder: 'trash' as const } : e))
     );
     if (selectedEmailId === id) setSelectedEmailId(null);
+    showToast({ type: 'info', title: 'E-mail excluído', autoDismiss: true, duration: 3000 });
   };
 
   const handleFavoriteSelected = () => {
@@ -307,6 +311,9 @@ export const EmailPage: React.FC<EmailPageProps> = ({ onBack }) => {
 
       {/* Composer modal */}
       {isComposing && <EmailComposer onClose={() => setIsComposing(false)} />}
+
+      {/* Toast notifications */}
+      <ToastSystem toasts={toasts} onDismiss={dismissToast} />
     </div>
   );
 };

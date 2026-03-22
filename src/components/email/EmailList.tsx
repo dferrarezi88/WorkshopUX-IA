@@ -179,25 +179,39 @@ export const EmailList: React.FC<EmailListProps> = ({
         </div>
 
         {/* Filter Tabs */}
-        <div style={{ display: 'flex', gap: '4px', marginTop: '10px' }}>
+        <div style={{ display: 'flex', gap: '0', marginTop: '10px', borderBottom: '1px solid #E5E7EB' }}>
           {TABS.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => onTabChange(tab.id)}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = '#F3F4F6';
+                    (e.currentTarget as HTMLElement).style.color = '#374151';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
+                    (e.currentTarget as HTMLElement).style.color = '#6B7280';
+                  }
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px',
-                  padding: '5px 12px',
-                  borderRadius: '6px',
+                  gap: '6px',
+                  padding: '8px 16px',
                   border: 'none',
+                  borderBottom: isActive ? '2px solid #1D4ED8' : '2px solid transparent',
+                  marginBottom: '-1px',
                   cursor: 'pointer',
-                  fontSize: '13px',
+                  fontSize: '14px',
                   fontWeight: isActive ? 500 : 400,
-                  backgroundColor: isActive ? '#e6f4ff' : 'transparent',
-                  color: isActive ? '#1890ff' : '#595959',
+                  backgroundColor: isActive ? '#EFF6FF' : 'transparent',
+                  color: isActive ? '#1D4ED8' : '#6B7280',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 {tab.icon && <MaterialIcon name={tab.icon} size={14} />}
@@ -276,9 +290,9 @@ export const EmailList: React.FC<EmailListProps> = ({
           const isHovered = hoveredId === email.id;
 
           let rowBg = '#ffffff';
-          if (isSelected) rowBg = '#e6f4ff';
-          else if (isChecked) rowBg = '#f0f7ff';
-          else if (isHovered) rowBg = '#f5f5f5';
+          if (isSelected) rowBg = '#DBEAFE';
+          else if (isChecked) rowBg = '#DBEAFE';
+          else if (isHovered) rowBg = '#EFF6FF';
 
           return (
             <div
@@ -298,10 +312,10 @@ export const EmailList: React.FC<EmailListProps> = ({
                 position: 'relative',
               }}
             >
-              {/* Checkbox */}
+              {/* Checkbox — visível apenas ao hover ou quando selecionado */}
               <div
                 onClick={(e) => { e.stopPropagation(); onToggleSelect(email.id); }}
-                style={{ paddingTop: '1px', flexShrink: 0 }}
+                style={{ paddingTop: '1px', flexShrink: 0, opacity: isHovered || isChecked ? 1 : 0, transition: 'opacity 0.15s' }}
               >
                 <input
                   type="checkbox"

@@ -76,8 +76,11 @@ export const EmailsModule: React.FC<EmailsModuleProps> = ({ onNavigateToEmail })
           transition: 'background-color 0.15s',
         }}
       >
-        {/* Checkbox */}
-        <div onClick={(e) => handleToggleCheck(email.id, e)} style={{ paddingTop: '2px', flexShrink: 0 }}>
+        {/* Checkbox — visível apenas ao hover */}
+        <div
+          onClick={(e) => handleToggleCheck(email.id, e)}
+          style={{ paddingTop: '2px', flexShrink: 0, opacity: isHovered || isChecked ? 1 : 0, transition: 'opacity 0.15s' }}
+        >
           <input
             type="checkbox"
             checked={isChecked}
@@ -378,20 +381,9 @@ export const EmailsModule: React.FC<EmailsModuleProps> = ({ onNavigateToEmail })
           {/* Unread emails */}
           {unreadEmails.map((email) => renderEmailRow(email))}
 
-          {/* Separator — only if both unread and read exist */}
+          {/* Separator — simple line between unread and read */}
           {unreadEmails.length > 0 && readEmails.length > 0 && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 0',
-              }}
-            >
-              <div style={{ flex: 1, height: '1px', backgroundColor: '#f0f0f0' }} />
-              <MaterialIcon name="star" size={12} className="" />
-              <div style={{ flex: 1, height: '1px', backgroundColor: '#f0f0f0' }} />
-            </div>
+            <div style={{ height: '1px', backgroundColor: '#f0f0f0', margin: '2px 0' }} />
           )}
 
           {/* Read emails */}

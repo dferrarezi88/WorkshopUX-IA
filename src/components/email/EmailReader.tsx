@@ -81,8 +81,33 @@ export const EmailReader: React.FC<EmailReaderProps> = ({
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        position: 'relative',
       }}
     >
+      {/* Botão fechar (X) */}
+      <button
+        onClick={onClose}
+        title="Fechar"
+        style={{
+          position: 'absolute',
+          top: '12px',
+          right: '16px',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          color: '#8c8c8c',
+          padding: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          borderRadius: '4px',
+          zIndex: 1,
+        }}
+        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#262626'; }}
+        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#8c8c8c'; }}
+      >
+        <MaterialIcon name="close" size={20} />
+      </button>
+
       {/* Scrollable content */}
       <div style={{ flex: 1, overflow: 'auto', padding: '20px' }}>
         {/* Subject */}
@@ -92,6 +117,7 @@ export const EmailReader: React.FC<EmailReaderProps> = ({
             fontWeight: 600,
             color: '#262626',
             marginBottom: '16px',
+            paddingRight: '32px',
           }}
         >
           {email.subject}
