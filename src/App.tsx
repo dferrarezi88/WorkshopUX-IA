@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { CustomizableHome } from './components/CustomizableHome';
+import { EmailPage } from './pages/EmailPage';
 import { DrawerAgendamentoSecretaria } from './components/DrawerAgendamentoSecretaria';
 import { DrawerAgendamentoColaborador } from './components/DrawerAgendamentoColaborador';
 import { CreateEventModal } from './components/CreateEventModal';
@@ -48,6 +49,7 @@ export interface ModuleConfig {
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'home' | 'email'>('home');
   const [user] = useState<User>({
     name: 'João Silva',
     profile: 'admin',
@@ -308,11 +310,12 @@ function App() {
       
       {/* Content Area: Sidebar + Main */}
       <div className="flex flex-1">
-        <Sidebar 
-          collapsed={sidebarCollapsed} 
+        <Sidebar
+          collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
           favoriteItems={favoriteItems.map(item => item.key)}
           onToggleFavorite={handleToggleFavorite}
+          onNavigateToEmail={() => setCurrentPage('email')}
         />
         
         <div className="flex-1 flex flex-col">
@@ -322,19 +325,26 @@ function App() {
             onReorder={handleReorderFavorites}
           />
           
-          <main className="flex-1 p-6">
-            <CustomizableHome
-              user={user}
-              onEventClick={handleEventClick}
-              onCreateEvent={handleCreateEvent}
-              modules={modules}
-              agendaViewMode={agendaViewMode}
-              onAgendaViewModeChange={setAgendaViewMode}
-              roomColors={roomColors}
-              onOpenRoomColorConfig={() => setShowRoomColorConfig(true)}
-              eventStatuses={eventStatuses}
-            />
-          </main>
+          {currentPage === 'email' ? (
+            <div className="flex-1 overflow-hidden" style={{ display: 'flex', flexDirection: 'column' }}>
+              <EmailPage onBack={() => setCurrentPage('home')} />
+            </div>
+          ) : (
+            <main className="flex-1 p-6">
+              <CustomizableHome
+                user={user}
+                onEventClick={handleEventClick}
+                onCreateEvent={handleCreateEvent}
+                modules={modules}
+                agendaViewMode={agendaViewMode}
+                onAgendaViewModeChange={setAgendaViewMode}
+                roomColors={roomColors}
+                onOpenRoomColorConfig={() => setShowRoomColorConfig(true)}
+                eventStatuses={eventStatuses}
+                onNavigateToEmail={() => setCurrentPage('email')}
+              />
+            </main>
+          )}
         </div>
       </div>
 

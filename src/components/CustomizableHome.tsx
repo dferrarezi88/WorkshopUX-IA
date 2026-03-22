@@ -17,6 +17,7 @@ interface CustomizableHomeProps {
   onAcceptInvite?: () => void; // CORREÇÃO 2: Agora sem parâmetro, usa evento selecionado
   onDeclineInvite?: () => void; // CORREÇÃO 2: Agora sem parâmetro, usa evento selecionado
   eventStatuses?: Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED'>; // Status dos eventos
+  onNavigateToEmail?: () => void;
 }
 
 type ModuleId = 'calendar' | 'news' | 'emails' | 'managerial';
@@ -33,6 +34,7 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
   onAcceptInvite, // CORREÇÃO 2
   onDeclineInvite, // CORREÇÃO 2
   eventStatuses = {}, // Status dos eventos
+  onNavigateToEmail,
 }) => {
   const [calendarExpanded, setCalendarExpanded] = useState(false);
 
@@ -65,7 +67,7 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
         case 'news':
           return <NewsModule />;
         case 'emails':
-          return <EmailsModule />;
+          return <EmailsModule onNavigateToEmail={onNavigateToEmail} />;
         case 'managerial':
           return <ManagerialViewModule profile={user.profile} />;
         default:

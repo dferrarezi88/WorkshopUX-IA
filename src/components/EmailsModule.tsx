@@ -55,7 +55,11 @@ const mockEmails: EmailItem[] = [
   },
 ];
 
-export const EmailsModule: React.FC = () => {
+interface EmailsModuleProps {
+  onNavigateToEmail?: () => void;
+}
+
+export const EmailsModule: React.FC<EmailsModuleProps> = ({ onNavigateToEmail }) => {
   const unreadCount = mockEmails.filter(e => e.unread).length;
 
   return (
@@ -70,7 +74,10 @@ export const EmailsModule: React.FC = () => {
             </span>
           )}
         </div>
-        <button className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1">
+        <button
+          className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
+          onClick={onNavigateToEmail}
+        >
           Ver todos
           <ChevronRight size={14} />
         </button>
