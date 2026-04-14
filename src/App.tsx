@@ -282,9 +282,6 @@ function App() {
     }
   }, [hasShownLoginToast, showToast]);
 
-  // CORREÇÃO 2: State para armazenar status dos eventos
-  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>>({});
-
   const handleSendEditRequest = (eventId: string, requestType: 'edit' | 'cancel') => {
     setEventStatuses(prev => ({
       ...prev,
