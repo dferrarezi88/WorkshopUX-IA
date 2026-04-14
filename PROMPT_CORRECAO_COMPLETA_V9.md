@@ -1,3 +1,62 @@
+# PROMPT — CORREÇÃO COMPLETA v9
+# 3 problemas para corrigir — executar em ordem
+
+## REGRA ABSOLUTA
+NÃO alterar CalendarModule internamente.
+NÃO alterar Header, Sidebar ou outros módulos.
+NÃO criar novos componentes.
+Executar EXATAMENTE como descrito.
+
+---
+
+## BRANCH
+git checkout -b feature/correcao-completa-v9
+
+---
+
+## LEIA ESTES ARQUIVOS ANTES DE QUALQUER ALTERAÇÃO
+- src/App.tsx
+- src/components/StatusCards.tsx
+- src/components/CustomizableHome.tsx
+- src/components/CalendarModule.tsx
+- src/components/DrawerAgendamentoSecretaria.tsx
+
+---
+
+## PROBLEMA 1 — CARDS DUPLICADOS
+
+### CAUSA
+O componente <StatusCards /> está sendo renderizado em DOIS lugares:
+1. Dentro do CalendarModule.tsx
+2. No arquivo pai (CustomizableHome.tsx ou App.tsx)
+
+### SOLUÇÃO
+
+PASSO A — Abrir src/components/CalendarModule.tsx
+Localizar e REMOVER:
+- Qualquer import de StatusCards no topo do arquivo
+- Qualquer chamada <StatusCards /> dentro do JSX
+Salvar o arquivo.
+
+PASSO B — Abrir src/components/CustomizableHome.tsx
+Verificar se <StatusCards /> aparece apenas UMA VEZ.
+Se aparecer mais de uma vez, manter apenas a primeira ocorrência.
+Salvar o arquivo.
+
+RESULTADO ESPERADO: Cards aparecem apenas uma vez na página.
+
+---
+
+## PROBLEMA 2 — PILLS COM CORES ERRADAS
+
+### CAUSA
+O array de cards no StatusCards.tsx tem cores diferentes nas pills.
+
+### SOLUÇÃO
+Abrir src/components/StatusCards.tsx
+Substituir o arquivo COMPLETO por este código:
+
+```tsx
 import React, { useState } from 'react'
 
 const syncTime = new Date().toLocaleTimeString('pt-BR', {
@@ -111,6 +170,7 @@ export const StatusCards: React.FC = () => {
                 {card.title}
               </span>
             </div>
+            {/* PILL — COR AZUL #1890ff PARA TODOS SEM EXCEÇÃO */}
             <span style={{
               background: '#1890ff',
               color: '#ffffff',
@@ -125,6 +185,7 @@ export const StatusCards: React.FC = () => {
             </span>
           </div>
 
+          {/* Número principal */}
           <div style={{
             fontFamily: "'Roboto', sans-serif",
             fontSize: '36px',
@@ -136,6 +197,7 @@ export const StatusCards: React.FC = () => {
             {card.total}
           </div>
 
+          {/* Subtexto */}
           <div style={{
             fontFamily: "'Roboto', sans-serif",
             fontSize: '13px',
@@ -145,11 +207,13 @@ export const StatusCards: React.FC = () => {
             {card.subtitle}
           </div>
 
+          {/* Separador */}
           <div style={{
             borderTop: '1px solid #f0f0f0',
             marginBottom: '10px',
           }} />
 
+          {/* Rodapé sincronização */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -173,3 +237,89 @@ export const StatusCards: React.FC = () => {
 }
 
 export default StatusCards
+```
+
+---
+
+## PROBLEMA 3 — PERFIL SECRETÁRIA COM TELA BRANCA
+
+### CAUSA
+O merge criou uma declaração duplicada de variáveis no App.tsx,
+causando erro de runtime que deixa a tela branca.
+
+### SOLUÇÃO
+
+Abrir src/App.tsx
+
+PASSO A — Buscar por TODAS as ocorrências de:
+- `eventStatuses`
+- `setEventStatuses`
+- `handleSendEditRequest`
+- `PENDING_EDIT`
+
+PASSO B — Para cada variável/função encontrada DUPLICADA:
+Manter APENAS A ÚLTIMA declaração (a mais completa/recente).
+Remover todas as declarações anteriores duplicadas.
+
+PASSO C — Verificar se existe este estado (deve existir APENAS UMA VEZ):
+```typescript
+const [eventStatuses, setEventStatuses] = useState<Record<string, 
+  'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>>({})
+```
+
+PASSO D — Verificar se existe esta função (deve existir APENAS UMA VEZ):
+```typescript
+const handleSendEditRequest = (eventId: string, requestType: 'edit' | 'cancel') => {
+  setEventStatuses(prev => ({ ...prev, [eventId]: 'PENDING_EDIT' }))
+  // toast de sucesso
+}
+```
+
+PASSO E — No DrawerAgendamentoSecretaria.tsx verificar se:
+1. O botão "Solicitar alteração ou cancelamento" está presente
+2. O modal de solicitação está presente
+3. A função handleSendEditRequest está sendo chamada corretamente
+4. NÃO há erros de TypeScript no componente
+
+Se encontrar erros, corrigir sem alterar a lógica.
+
+---
+
+## PASSO FINAL — VERIFICAR BUILD
+
+Executar verificação:
+```bash
+npm run build
+```
+
+Se passar sem erros, commitar:
+```bash
+git add .
+git commit -m "fix: cards duplicados removidos, pills azuis, secretaria corrigida"
+git push origin feature/correcao-completa-v9
+```
+
+Se der erro de TypeScript, corrigir antes de commitar.
+
+---
+
+## RESULTADO ESPERADO
+
+HOME:
+```
+[E-mail] [Processos] [Notícias] [Agenda]  ← UMA linha apenas
+         Todas pills AZUIS #1890ff ✓
+
+[Calendário / Agenda]
+  [Visão Colaborador] [Visão Secretaria]
+```
+
+PERFIL SECRETÁRIA:
+```
+Clicar em Visão Secretaria ✓
+Clicar em uma reunião ✓
+Drawer abre corretamente ✓
+Botão "Solicitar alteração ou cancelamento" visível ✓
+Modal abre com campo de justificativa ✓
+Enviar solicitação → toast + status "Pendente de edição" ✓
+```

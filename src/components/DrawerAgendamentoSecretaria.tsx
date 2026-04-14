@@ -325,43 +325,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
         </div>
       </div>
 
-      {/* Request Edit Modal */}
-      <Dialog open={showRequestModal} onOpenChange={setShowRequestModal}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Solicitar alteração ou cancelamento</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Justificativa *
-              </label>
-              <Textarea
-                value={justification}
-                onChange={(e) => setJustification(e.target.value)}
-                placeholder="Descreva o motivo da necessidade da liberação da sala."
-                rows={4}
-                className="resize-none"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Mínimo 10 caracteres
-              </p>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowRequestModal(false)}>
-              Cancelar
-            </Button>
-            <Button 
-              onClick={handleSubmitRequest}
-              disabled={justification.trim().length < 10}
-            >
-              Enviar solicitação
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
       {/* Cancel Confirmation Modal */}
       {showCancelConfirm && (
         <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
@@ -489,86 +452,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
         </div>
       )}
 
-      {/* Modal de Solicitação de Alteração / Cancelamento */}
-      {showRequestModal && (
-        <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <MaterialIcon name="edit_calendar" size={24} className="text-blue-600" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-1">Solicitar alteração ou cancelamento</h3>
-                <p className="text-sm text-gray-600">
-                  Você está solicitando ao organizador que realize uma alteração ou cancelamento desta reunião.
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              <div>
-                <div className="text-sm font-medium text-gray-700 mb-2">Tipo de solicitação</div>
-                <div className="space-y-3">
-                  <label className="flex items-center gap-3 rounded-lg border border-gray-200 p-3 cursor-pointer hover:border-blue-300">
-                    <input
-                      type="radio"
-                      name="requestType"
-                      value="edit"
-                      checked={requestType === 'edit'}
-                      onChange={() => setRequestType('edit')}
-                      className="form-radio text-blue-600"
-                    />
-                    <span className="text-gray-800">Alteração de data/hora</span>
-                  </label>
-                  <label className="flex items-center gap-3 rounded-lg border border-gray-200 p-3 cursor-pointer hover:border-blue-300">
-                    <input
-                      type="radio"
-                      name="requestType"
-                      value="cancel"
-                      checked={requestType === 'cancel'}
-                      onChange={() => setRequestType('cancel')}
-                      className="form-radio text-blue-600"
-                    />
-                    <span className="text-gray-800">Cancelamento da reunião</span>
-                  </label>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Justificativa *</label>
-                <textarea
-                  value={justification}
-                  onChange={(e) => setJustification(e.target.value)}
-                  placeholder="Descreva o motivo da necessidade de liberação desta agenda..."
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                />
-                {requestError && (
-                  <p className="mt-2 text-sm text-red-600">{requestError}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-6 flex gap-3">
-              <button
-                onClick={() => {
-                  setShowRequestModal(false);
-                  setRequestError('');
-                }}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSendRequest}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-              >
-                Enviar solicitação
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };
