@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { X, Calendar, Clock, MapPin, Users, Droplet, Coffee, AlertCircle, User, Edit } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Textarea } from './ui/textarea';
+import { Button } from './ui/button';
+import { MaterialIcon } from './MaterialIcon';
 import type { CalendarEvent } from '../App';
 
 interface DrawerAgendamentoSecretariaProps {
@@ -10,6 +15,7 @@ interface DrawerAgendamentoSecretariaProps {
   isInvitePending?: boolean; // FEATURE 2: indica se é convite pendente
   onAcceptInvite?: () => void; // FEATURE 2: callback para aceitar convite
   onDeclineInvite?: () => void; // FEATURE 2: callback para recusar convite
+  onRequestEdit?: (requestType: 'alteracao' | 'cancelamento', justification: string) => void; // Nova: callback para solicitar alteração
 }
 
 export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaProps> = ({ 
@@ -19,11 +25,15 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
   onEdit,
   isInvitePending = false,
   onAcceptInvite,
-  onDeclineInvite
+  onDeclineInvite,
+  onRequestEdit
 }) => {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancelMessage, setCancelMessage] = useState('');
   const [showCancelSuccess, setShowCancelSuccess] = useState(false);
+  const [showRequestModal, setShowRequestModal] = useState(false);
+  const [requestType, setRequestType] = useState<'alteracao' | 'cancelamento'>('alteracao');
+  const [justification, setJustification] = useState('');
 
   if (!event) return null;
 
@@ -40,6 +50,13 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
       setShowCancelSuccess(false);
       onClose();
     }, 3000);
+  };
+
+  const handleSubmitRequest = () => {
+    if (justification.trim().length < 10) return;
+    onRequestEdit?.(requestType, justification);
+    setShowRequestModal(false);
+    setJustification('');
   };
 
   const formatDate = (date: Date) => {
@@ -224,6 +241,26 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
             {/* BOTÕES PARA SECRETARIA - SEM CONVITE PENDENTE */}
             {!isInvitePending && (
               <>
+                {/* BOTÃO SOLICITAR ALTERAÇÃO/CANCELAMENTO */}
+                {event.status !== 'pendente-edicao' && event.status !== 'cancelada' && onRequestEdit && (
+                  <button
+                    onClick={() => setShowRequestModal(true)}
+                    className="w-full px-4 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2"
+                  >
+                    <MaterialIcon name="edit_calendar" size={20} />
+                    Solicitar alteração ou cancelamento
+                  </button>
+                )}
+
+                {/* TEXTO QUANDO JÁ SOLICITADO */}
+                {event.status === 'pendente-edicao' && (
+                  <div className="w-full px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
+                    <p className="text-sm text-yellow-800 font-medium">
+                      Solicitação já enviada. Aguardando ação do organizador.
+                    </p>
+                  </div>
+                )}
+
                 {/* BOTÃO EDITAR - ALTERAÇÃO 5 (apenas se for organizador) */}
                 {isEventOrganizer && onEdit && (
                   <button
@@ -248,6 +285,58 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
           </div>
         </div>
       </div>
+
+      {/* Request Edit Modal */}
+      <Dialog open={showRequestModal} onOpenChange={setShowRequestModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Solicitar alteração ou cancelamento</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-2 block">
+                Tipo de solicitação
+              </label>
+              <RadioGroup value={requestType} onValueChange={(value) => setRequestType(value as 'alteracao' | 'cancelamento')}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="alteracao" id="alteracao" />
+                  <label htmlFor="alteracao" className="text-sm">Alteração de data/hora</label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="cancelamento" id="cancelamento" />
+                  <label htmlFor="cancelamento" className="text-sm">Cancelamento da reunião</label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-gray-700 mb-2 block">
+                Justificativa *
+              </label>
+              <Textarea
+                value={justification}
+                onChange={(e) => setJustification(e.target.value)}
+                placeholder="Descreva o motivo da necessidade de liberação desta agenda..."
+                rows={4}
+                className="resize-none"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Mínimo 10 caracteres
+              </p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowRequestModal(false)}>
+              Cancelar
+            </Button>
+            <Button 
+              onClick={handleSubmitRequest}
+              disabled={justification.trim().length < 10}
+            >
+              Enviar solicitação
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Cancel Confirmation Modal */}
       {showCancelConfirm && (

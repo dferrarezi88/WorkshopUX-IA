@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { MaterialIcon } from './MaterialIcon'; // CORREÇÃO 1: Material Design icons
+import { Badge } from './ui/badge'; // Badge component
+import { StatusCards } from './StatusCards'; // Status cards component
 import type { CalendarEvent } from '../App';
 import type { UserProfile } from '../App';
 
@@ -14,7 +16,7 @@ interface CalendarModuleProps {
   roomColors?: Record<string, string>; // ALTERAÇÃO 2: cores das salas
   onOpenRoomColorConfig?: () => void; // NOVA: callback para abrir modal de config de cores
   currentUser?: string; // CORREÇÃO 2: usuário logado
-  eventStatuses?: Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED'>; // Status dos eventos
+  eventStatuses?: Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>; // Status dos eventos
 }
 
 type ViewMode = 'dia' | 'semana' | 'mes' | 'agenda';
@@ -294,7 +296,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
   const weekDaysShort = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   // Função para obter o status atual do evento (prioriza eventStatuses)
-  const getEventStatus = (event: CalendarEvent): 'PENDING' | 'ACCEPTED' | 'DECLINED' | undefined => {
+  const getEventStatus = (event: CalendarEvent): 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT' | undefined => {
     return eventStatuses[event.id] || event.inviteStatus;
   };
 
@@ -636,6 +638,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                         // CORREÇÃO 2 & 3: Verificar se é convite pendente
                         const currentStatus = getEventStatus(event);
                         const isPendingInvite = currentStatus === 'PENDING' && event.organizer !== currentUser;
+                        const isPendingEdit = currentStatus === 'PENDING_EDIT';
                         const isAccepted = currentStatus === 'ACCEPTED';
                         const isDeclined = currentStatus === 'DECLINED';
                         
@@ -646,7 +649,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             style={{ backgroundColor: getRoomColor(event.room) }}
                           >
                             {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
-                            {isPendingInvite && (
+                            {(isPendingInvite || isPendingEdit) && (
                               <div 
                                 className="absolute inset-0 rounded pointer-events-none"
                                 style={{
@@ -664,6 +667,15 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             )}
                             {isDeclined && (
                               <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full z-10"></div>
+                            )}
+                            
+                            {/* Badge para PENDING_EDIT */}
+                            {isPendingEdit && (
+                              <div className="absolute -top-2 -right-2 z-10">
+                                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200 text-xs">
+                                  Pendente de edição
+                                </Badge>
+                              </div>
                             )}
                             
                             <div onClick={() => onEventClick(event)} className="relative z-10">
@@ -793,6 +805,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             // CORREÇÃO 2 & 3: Verificar status
                             const currentStatus = getEventStatus(event);
                             const isPendingInvite = currentStatus === 'PENDING' && event.organizer !== currentUser;
+                            const isPendingEdit = currentStatus === 'PENDING_EDIT';
                             const isAccepted = currentStatus === 'ACCEPTED';
                             const isDeclined = currentStatus === 'DECLINED';
                             
@@ -807,7 +820,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                                 style={{ backgroundColor: getRoomColor(event.room) }}
                               >
                                 {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
-                                {isPendingInvite && (
+                                {(isPendingInvite || isPendingEdit) && (
                                   <div 
                                     className="absolute inset-0 rounded pointer-events-none"
                                     style={{
@@ -825,6 +838,15 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                                 )}
                                 {isDeclined && (
                                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full z-10"></div>
+                                )}
+                                
+                                {/* Badge para PENDING_EDIT */}
+                                {isPendingEdit && (
+                                  <div className="absolute -top-2 -right-2 z-10">
+                                    <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200 text-xs">
+                                      Pendente de edição
+                                    </Badge>
+                                  </div>
                                 )}
                                 
                                 <div className="relative z-10">
@@ -1070,6 +1092,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                   // CORREÇÃO 2 & 3: Verificar status
                   const currentStatus = getEventStatus(event);
                   const isPendingInvite = currentStatus === 'PENDING' && event.organizer !== currentUser;
+                  const isPendingEdit = currentStatus === 'PENDING_EDIT';
                   const isAccepted = currentStatus === 'ACCEPTED';
                   const isDeclined = currentStatus === 'DECLINED';
                   
@@ -1090,6 +1113,11 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                           {isPendingInvite && (
                             <span className="px-2 py-0.5 bg-yellow-100 border border-yellow-300 rounded text-xs font-medium text-yellow-800">
                               Pendente
+                            </span>
+                          )}
+                          {isPendingEdit && (
+                            <span className="px-2 py-0.5 bg-yellow-100 border border-yellow-300 rounded text-xs font-medium text-yellow-800">
+                              Pendente de edição
                             </span>
                           )}
                           {isAccepted && (
@@ -1282,6 +1310,11 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
             </button>
           </div>
         </div>
+      </div>
+
+      {/* Status Cards */}
+      <div style={{ padding: '0 0 16px 0' }}>
+        <StatusCards inCalendarModule={true} />
       </div>
 
       {/* Conteúdo do Calendário */}

@@ -16,7 +16,7 @@ interface CustomizableHomeProps {
   onOpenRoomColorConfig?: () => void; // NOVA
   onAcceptInvite?: () => void; // CORREÇÃO 2: Agora sem parâmetro, usa evento selecionado
   onDeclineInvite?: () => void; // CORREÇÃO 2: Agora sem parâmetro, usa evento selecionado
-  eventStatuses?: Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED'>; // Status dos eventos
+  eventStatuses?: Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>; // Status dos eventos
 }
 
 type ModuleId = 'calendar' | 'news' | 'emails' | 'managerial';

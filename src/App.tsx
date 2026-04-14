@@ -36,6 +36,7 @@ export interface CalendarEvent {
   isConcatenated?: boolean;
   originalEvents?: CalendarEvent[];
   inviteStatus?: 'PENDING' | 'ACCEPTED' | 'DECLINED'; // CORREÇÃO 2: status do convite
+  status?: string; // Status geral do evento (ativo, pendente-edicao, cancelada)
 }
 
 export interface ModuleConfig {
@@ -73,6 +74,9 @@ function App() {
   // ALTERAÇÃO 5: State para edição de evento
   const [editingEvent, setEditingEvent] = useState<CalendarEvent | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
+  
+  // Status dos eventos
+  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>>({});
   
   // New states for welcome and tutorial
   const [showWelcomeModal, setShowWelcomeModal] = useState(() => {
@@ -168,6 +172,34 @@ function App() {
     setEditingEvent(null);
   };
 
+  // Handler para solicitar alteração/cancelamento
+  const handleRequestEdit = (requestType: 'alteracao' | 'cancelamento', justification: string) => {
+    if (!selectedEvent) return;
+    
+    // Atualizar status do evento
+    setEventStatuses(prev => ({
+      ...prev,
+      [selectedEvent.id]: 'PENDING_EDIT'
+    }));
+
+    // Simular notificações
+    console.log('[NOTIFICAÇÃO] Workspace: Solicitação enviada aos participantes');
+    console.log('[E-MAIL] Organizador notificado por e-mail');
+    console.log('[MATTERMOST] Mensagem enviada ao organizador');
+
+    // Mostrar toast de sucesso
+    showToast({
+      type: 'success',
+      title: 'Sucesso',
+      message: 'Solicitação enviada ao organizador',
+      autoDismiss: true,
+      duration: 4000,
+    });
+
+    // Fechar drawer
+    setSelectedEvent(null);
+  };
+
   const handleWelcomeComplete = (synced: boolean) => {
     localStorage.setItem('workspace_welcomed', 'true');
     if (synced) {
@@ -247,7 +279,7 @@ function App() {
   }, [hasShownLoginToast, showToast]);
 
   // CORREÇÃO 2: State para armazenar status dos eventos
-  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED'>>({});
+  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>>({});
 
   // CORREÇÃO 2: Handlers para aceitar/recusar convite - ATUALIZA O STATUS
   const handleAcceptInvite = () => {
@@ -348,6 +380,7 @@ function App() {
           isInvitePending={selectedEvent?.inviteStatus === 'PENDING' && selectedEvent?.organizer !== user.name}
           onAcceptInvite={handleAcceptInvite}
           onDeclineInvite={handleDeclineInvite}
+          onRequestEdit={handleRequestEdit}
         />
       ) : (
         <DrawerAgendamentoColaborador 
