@@ -29,8 +29,8 @@ const cards: StatusCard[] = [
   {
     id: 'processos',
     icon: 'assignment',
-    iconColor: '#52c41a',
-    iconBg: '#f6ffed',
+    iconColor: '#1890ff',
+    iconBg: '#e6f4ff',
     title: 'Processos',
     total: 12,
     pill: { label: '4 pendentes', color: '#fa8c16' },
@@ -39,8 +39,8 @@ const cards: StatusCard[] = [
   {
     id: 'noticias',
     icon: 'newspaper',
-    iconColor: '#722ed1',
-    iconBg: '#f9f0ff',
+    iconColor: '#1890ff',
+    iconBg: '#e6f4ff',
     title: 'Notícias',
     total: 5,
     pill: { label: '2 novas', color: '#52c41a' },
@@ -49,8 +49,8 @@ const cards: StatusCard[] = [
   {
     id: 'agenda',
     icon: 'calendar_today',
-    iconColor: '#fa8c16',
-    iconBg: '#fff7e6',
+    iconColor: '#1890ff',
+    iconBg: '#e6f4ff',
     title: 'Agenda',
     total: 3,
     pill: { label: '3 hoje', color: '#1890ff' },
@@ -87,8 +87,8 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ inCalendarModule = fal
           style={{
             background: '#ffffff',
             borderRadius: '8px',
-            border: hoveredId === card.id ? '1px solid #1890ff' : '1px solid #f0f0f0',
-            boxShadow: inCalendarModule ? 'none' : (hoveredId === card.id ? '0 4px 12px rgba(24,144,255,0.12)' : '0 1px 4px rgba(0,0,0,0.06)'),
+            border: hoveredId === card.id ? '1px solid #91caff' : '1px solid #f0f0f0',
+            boxShadow: hoveredId === card.id ? '0 4px 12px rgba(24,144,255,0.10)' : (inCalendarModule ? 'none' : '0 1px 3px rgba(0,0,0,0.04)'),
             padding: inCalendarModule ? '14px' : '20px',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
@@ -107,17 +107,18 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ inCalendarModule = fal
               gap: '10px',
             }}>
               <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '8px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '6px',
                 background: card.iconBg,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                flexShrink: 0,
               }}>
                 <span
                   className="material-icons"
-                  style={{ color: card.iconColor, fontSize: '22px' }}
+                  style={{ color: card.iconColor, fontSize: '20px' }}
                 >
                   {card.icon}
                 </span>
@@ -159,26 +160,27 @@ export const StatusCards: React.FC<StatusCardsProps> = ({ inCalendarModule = fal
 
           <div style={{
             fontFamily: "'Roboto', sans-serif",
-            fontSize: '14px',
+            fontSize: '13px',
             fontWeight: 400,
             color: '#8c8c8c',
           }}>
             {card.subtitle}
           </div>
 
-          {!inCalendarModule && (
-            <div style={{
-              marginTop: '16px',
-              paddingTop: '12px',
-              borderTop: '1px solid #f0f0f0',
-              fontFamily: "'Roboto', sans-serif",
-              fontSize: '12px',
-              color: '#bfbfbf',
-              textAlign: 'right',
-            }}>
-              Atualizado às {syncTime}
-            </div>
-          )}
+          <div style={{
+            marginTop: '16px',
+            paddingTop: '12px',
+            borderTop: '1px solid #f0f0f0',
+            fontFamily: "'Roboto', sans-serif",
+            fontSize: '12px',
+            color: '#bfbfbf',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '4px',
+          }}>
+            <MaterialIcon name="sync" size={14} />
+            <span>Sincronizado às {syncTime}</span>
+          </div>
         </div>
       ))}
     </div>

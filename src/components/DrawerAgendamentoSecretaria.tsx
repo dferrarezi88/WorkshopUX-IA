@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { X, Calendar, Clock, MapPin, Users, Droplet, Coffee, AlertCircle, User, Edit } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from './ui/dialog';
-import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { Textarea } from './ui/textarea';
 import { Button } from './ui/button';
 import { MaterialIcon } from './MaterialIcon';
@@ -32,7 +31,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
   const [cancelMessage, setCancelMessage] = useState('');
   const [showCancelSuccess, setShowCancelSuccess] = useState(false);
   const [showRequestModal, setShowRequestModal] = useState(false);
-  const [requestType, setRequestType] = useState<'alteracao' | 'cancelamento'>('alteracao');
   const [justification, setJustification] = useState('');
 
   if (!event) return null;
@@ -54,7 +52,7 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
 
   const handleSubmitRequest = () => {
     if (justification.trim().length < 10) return;
-    onRequestEdit?.(requestType, justification);
+    onRequestEdit?.('alteracao', justification);
     setShowRequestModal(false);
     setJustification('');
   };
@@ -295,27 +293,12 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Tipo de solicitação
-              </label>
-              <RadioGroup value={requestType} onValueChange={(value) => setRequestType(value as 'alteracao' | 'cancelamento')}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="alteracao" id="alteracao" />
-                  <label htmlFor="alteracao" className="text-sm">Alteração de data/hora</label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="cancelamento" id="cancelamento" />
-                  <label htmlFor="cancelamento" className="text-sm">Cancelamento da reunião</label>
-                </div>
-              </RadioGroup>
-            </div>
-            <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
                 Justificativa *
               </label>
               <Textarea
                 value={justification}
                 onChange={(e) => setJustification(e.target.value)}
-                placeholder="Descreva o motivo da necessidade de liberação desta agenda..."
+                placeholder="Descreva o motivo da necessidade da liberação da sala."
                 rows={4}
                 className="resize-none"
               />
