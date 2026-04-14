@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { MaterialIcon } from './MaterialIcon'; // CORREÇÃO 1: Material Design icons
 import { Badge } from './ui/badge'; // Badge component
-import { StatusCards } from './StatusCards'; // Status cards component
 import type { CalendarEvent } from '../App';
 import type { UserProfile } from '../App';
 
@@ -1310,11 +1309,6 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
             </button>
           </div>
         </div>
-      </div>
-
-      {/* Status Cards */}
-      <div style={{ padding: '0 0 16px 0' }}>
-        <StatusCards inCalendarModule={true} />
       </div>
 
       {/* Conteúdo do Calendário */}
