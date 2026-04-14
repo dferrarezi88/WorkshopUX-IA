@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { CustomizableHome } from './components/CustomizableHome';
+import { EmailPage } from './pages/EmailPage';
 import { DrawerAgendamentoSecretaria } from './components/DrawerAgendamentoSecretaria';
 import { DrawerAgendamentoColaborador } from './components/DrawerAgendamentoColaborador';
 import { CreateEventModal } from './components/CreateEventModal';
@@ -11,6 +12,7 @@ import { CustomizeDrawer } from './components/CustomizeDrawer';
 import { FavoriteCards, FavoriteItem } from './components/FavoriteCards';
 import { RoomColorConfig } from './components/RoomColorConfig'; // ALTERAÇÃO 2
 import { ToastSystem, useToast } from './components/ToastSystem'; // FEATURE 1
+import { MaterialIcon } from './components/MaterialIcon';
 
 export type UserProfile = 'colaborador' | 'lider' | 'admin';
 
@@ -49,6 +51,7 @@ export interface ModuleConfig {
 
 function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [currentPage, setCurrentPage] = useState<'home' | 'email'>('home');
   const [user] = useState<User>({
     name: 'João Silva',
     profile: 'admin',
@@ -278,6 +281,24 @@ function App() {
     }
   }, [hasShownLoginToast, showToast]);
 
+  // CORREÇÃO 2: State para armazenar status dos eventos
+  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>>({});
+
+  const handleSendEditRequest = (eventId: string, requestType: 'edit' | 'cancel') => {
+    setEventStatuses(prev => ({
+      ...prev,
+      [eventId]: 'PENDING_EDIT',
+    }));
+
+    showToast({
+      type: 'success',
+      title: 'Solicitação enviada ao organizador',
+      message: 'Solicitação enviada ao organizador',
+      autoDismiss: true,
+      duration: 4000,
+    });
+  };
+
   // CORREÇÃO 2: Handlers para aceitar/recusar convite - ATUALIZA O STATUS
   const handleAcceptInvite = () => {
     if (!selectedEvent) return;
@@ -337,11 +358,12 @@ function App() {
       
       {/* Content Area: Sidebar + Main */}
       <div className="flex flex-1">
-        <Sidebar 
-          collapsed={sidebarCollapsed} 
+        <Sidebar
+          collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
           favoriteItems={favoriteItems.map(item => item.key)}
           onToggleFavorite={handleToggleFavorite}
+          onNavigateToEmail={() => setCurrentPage('email')}
         />
         
         <div className="flex-1 flex flex-col">
@@ -351,19 +373,26 @@ function App() {
             onReorder={handleReorderFavorites}
           />
           
-          <main className="flex-1 p-6">
-            <CustomizableHome
-              user={user}
-              onEventClick={handleEventClick}
-              onCreateEvent={handleCreateEvent}
-              modules={modules}
-              agendaViewMode={agendaViewMode}
-              onAgendaViewModeChange={setAgendaViewMode}
-              roomColors={roomColors}
-              onOpenRoomColorConfig={() => setShowRoomColorConfig(true)}
-              eventStatuses={eventStatuses}
-            />
-          </main>
+          {currentPage === 'email' ? (
+            <div className="flex-1 overflow-hidden" style={{ display: 'flex', flexDirection: 'column' }}>
+              <EmailPage onBack={() => setCurrentPage('home')} />
+            </div>
+          ) : (
+            <main className="flex-1 p-6">
+              <CustomizableHome
+                user={user}
+                onEventClick={handleEventClick}
+                onCreateEvent={handleCreateEvent}
+                modules={modules}
+                agendaViewMode={agendaViewMode}
+                onAgendaViewModeChange={setAgendaViewMode}
+                roomColors={roomColors}
+                onOpenRoomColorConfig={() => setShowRoomColorConfig(true)}
+                eventStatuses={eventStatuses}
+                onNavigateToEmail={() => setCurrentPage('email')}
+              />
+            </main>
+          )}
         </div>
       </div>
 
@@ -371,9 +400,11 @@ function App() {
       {agendaViewMode === 'secretaria' ? (
         <DrawerAgendamentoSecretaria 
           event={selectedEvent}
+          eventStatus={selectedEvent ? eventStatuses[selectedEvent.id] : undefined}
           onClose={handleCloseDrawer}
           isEventOrganizer={selectedEvent?.organizer === user.name}
           onEdit={handleEditEvent}
+          onSendEditRequest={handleSendEditRequest}
           isInvitePending={selectedEvent?.inviteStatus === 'PENDING' && selectedEvent?.organizer !== user.name}
           onAcceptInvite={handleAcceptInvite}
           onDeclineInvite={handleDeclineInvite}

@@ -6,6 +6,7 @@ interface SidebarProps {
   setCollapsed: (collapsed: boolean) => void;
   favoriteItems: string[];
   onToggleFavorite: (key: string) => void;
+  onNavigateToEmail?: () => void;
 }
 
 interface MenuItem {
@@ -16,7 +17,7 @@ interface MenuItem {
   isFavorite?: boolean;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed, favoriteItems, onToggleFavorite }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed, favoriteItems, onToggleFavorite, onNavigateToEmail }) => {
   const [expandedMenus, setExpandedMenus] = useState<string[]>(['sub1', 'sub2', 'sub3', 'sub4']);
   const [activeKey, setActiveKey] = useState('1');
 
@@ -64,6 +65,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed, favor
       ],
     },
     { key: '14', label: 'Configurações', icon: <MaterialIcon name="settings" size={16} /> },
+    { key: 'email', label: 'E-mails', icon: <MaterialIcon name="email" size={16} /> },
   ];
 
   const toggleMenu = (key: string) => {
@@ -94,7 +96,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed, favor
           <div key={item.key}>
             <button
               onClick={() => {
-                if (item.children) {
+                if (item.key === 'email' && onNavigateToEmail) {
+                  onNavigateToEmail();
+                  setActiveKey(item.key);
+                } else if (item.children) {
                   toggleMenu(item.key);
                 } else {
                   setActiveKey(item.key);

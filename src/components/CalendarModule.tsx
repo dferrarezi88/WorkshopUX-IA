@@ -634,7 +634,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                           }
                         }
                         
-                        // CORREÇÃO 2 & 3: Verificar se é convite pendente
+                        // CORREÇÃO 2 & 3: Verificar estado do evento
                         const currentStatus = getEventStatus(event);
                         const isPendingInvite = currentStatus === 'PENDING' && event.organizer !== currentUser;
                         const isPendingEdit = currentStatus === 'PENDING_EDIT';
@@ -658,7 +658,12 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             )}
                             
                             {/* CORREÇÃO 3: Indicador de status */}
-                            {isPendingInvite && (
+                            {isPendingEdit && (
+                              <div className="absolute top-3 right-3 px-2 py-1 bg-yellow-100 border border-yellow-300 rounded-full text-[11px] font-medium text-yellow-800 z-10">
+                                Pendente de edição
+                              </div>
+                            )}
+                            {!isPendingEdit && isPendingInvite && (
                               <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 border-2 border-white rounded-full z-10"></div>
                             )}
                             {isAccepted && (
@@ -829,7 +834,12 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                                 )}
                                 
                                 {/* CORREÇÃO 3: Indicador de status */}
-                                {isPendingInvite && (
+                                {isPendingEdit && (
+                                  <div className="absolute top-3 right-3 px-2 py-1 bg-yellow-100 border border-yellow-300 rounded-full text-[11px] font-medium text-yellow-800 z-10">
+                                    Pendente de edição
+                                  </div>
+                                )}
+                                {!isPendingEdit && isPendingInvite && (
                                   <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 border-2 border-white rounded-full z-10"></div>
                                 )}
                                 {isAccepted && (
@@ -971,6 +981,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                         // CORREÇÃO 2 & 3: Verificar status
                         const currentStatus = getEventStatus(event);
                         const isPendingInvite = currentStatus === 'PENDING' && event.organizer !== currentUser;
+                        const isPendingEdit = currentStatus === 'PENDING_EDIT';
                         const isAccepted = currentStatus === 'ACCEPTED';
                         const isDeclined = currentStatus === 'DECLINED';
                         
@@ -985,7 +996,12 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             style={{ backgroundColor: getRoomColor(event.room) }}
                           >
                             {/* CORREÇÃO 3: Indicador de status */}
-                            {isPendingInvite && (
+                            {isPendingEdit && (
+                              <div className="absolute top-2 right-2 px-2 py-0.5 bg-yellow-100 border border-yellow-300 rounded-full text-[10px] font-medium text-yellow-800">
+                                Pendente de edição
+                              </div>
+                            )}
+                            {!isPendingEdit && isPendingInvite && (
                               <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-yellow-400 border border-white rounded-full"></div>
                             )}
                             {isAccepted && (
@@ -1109,7 +1125,12 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-sm font-medium text-gray-900">{displayTitle}</span>
                           {/* CORREÇÃO 3: Badge de status */}
-                          {isPendingInvite && (
+                          {isPendingEdit && (
+                            <span className="px-2 py-0.5 bg-yellow-100 border border-yellow-300 rounded text-xs font-medium text-yellow-800">
+                              Pendente de edição
+                            </span>
+                          )}
+                          {!isPendingEdit && isPendingInvite && (
                             <span className="px-2 py-0.5 bg-yellow-100 border border-yellow-300 rounded text-xs font-medium text-yellow-800">
                               Pendente
                             </span>
