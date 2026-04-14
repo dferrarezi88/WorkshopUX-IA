@@ -50,19 +50,22 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
       switch (moduleId) {
         case 'calendar':
           return (
-            <CalendarModule
-              expanded={calendarExpanded}
-              onToggleExpand={() => setCalendarExpanded(!calendarExpanded)}
-              onEventClick={onEventClick}
-              onCreateEvent={onCreateEvent}
-              userProfile={user.profile}
-              agendaViewMode={agendaViewMode}
-              onAgendaViewModeChange={onAgendaViewModeChange}
-              roomColors={roomColors}
-              onOpenRoomColorConfig={onOpenRoomColorConfig}
-              eventStatuses={eventStatuses}
-              currentUser={user.name}
-            />
+            <>
+              <StatusCards />
+              <CalendarModule
+                expanded={calendarExpanded}
+                onToggleExpand={() => setCalendarExpanded(!calendarExpanded)}
+                onEventClick={onEventClick}
+                onCreateEvent={onCreateEvent}
+                userProfile={user.profile}
+                agendaViewMode={agendaViewMode}
+                onAgendaViewModeChange={onAgendaViewModeChange}
+                roomColors={roomColors}
+                onOpenRoomColorConfig={onOpenRoomColorConfig}
+                eventStatuses={eventStatuses}
+                currentUser={user.name}
+              />
+            </>
           );
         case 'news':
           return <NewsModule />;

@@ -73,7 +73,6 @@ export const StatusCards: React.FC = () => {
               : 'translateY(0)',
           }}
         >
-          {/* Topo: ícone + título + pill */}
           <div style={{
             display: 'flex',
             alignItems: 'center',

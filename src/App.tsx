@@ -10,7 +10,6 @@ import { WelcomeModal } from './components/WelcomeModal';
 import { TutorialModal } from './components/TutorialModal';
 import { CustomizeDrawer } from './components/CustomizeDrawer';
 import { FavoriteCards, FavoriteItem } from './components/FavoriteCards';
-import { StatusCards } from './components/StatusCards';
 import { RoomColorConfig } from './components/RoomColorConfig'; // ALTERAÇÃO 2
 import { ToastSystem, useToast } from './components/ToastSystem'; // FEATURE 1
 import { MaterialIcon } from './components/MaterialIcon';
@@ -370,7 +369,6 @@ function App() {
             onRemove={handleRemoveFavorite}
             onReorder={handleReorderFavorites}
           />
-          {currentPage === 'home' && <StatusCards />}
           
           {currentPage === 'email' ? (
             <div className="flex-1 overflow-hidden" style={{ display: 'flex', flexDirection: 'column' }}>
