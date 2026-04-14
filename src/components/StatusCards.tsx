@@ -33,7 +33,7 @@ const cards: StatusCard[] = [
     iconBg: '#f6ffed',
     title: 'Processos',
     total: 12,
-    pill: { label: '4 pendentes', color: '#fa8c16' },
+    pill: { label: '4 pendentes', color: '#1890ff' },
     subtitle: 'em andamento',
   },
   {
@@ -43,7 +43,7 @@ const cards: StatusCard[] = [
     iconBg: '#f9f0ff',
     title: 'Notícias',
     total: 5,
-    pill: { label: '2 novas', color: '#52c41a' },
+    pill: { label: '2 novas', color: '#1890ff' },
     subtitle: 'publicadas hoje',
   },
   {
