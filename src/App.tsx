@@ -278,9 +278,6 @@ function App() {
     }
   }, [hasShownLoginToast, showToast]);
 
-  // CORREÇÃO 2: State para armazenar status dos eventos
-  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>>({});
-
   // CORREÇÃO 2: Handlers para aceitar/recusar convite - ATUALIZA O STATUS
   const handleAcceptInvite = () => {
     if (!selectedEvent) return;
