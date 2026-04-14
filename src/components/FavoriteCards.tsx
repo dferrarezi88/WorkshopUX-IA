@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Card, Row, Col, Tag } from 'antd';
 import { MaterialIcon } from './MaterialIcon'; // CORREÇÃO 1: Material Design icons
 
 export interface FavoriteItem {
@@ -40,50 +39,6 @@ export const FavoriteCards: React.FC<FavoriteCardsProps> = ({ items, onRemove, o
   const [isExpanded, setIsExpanded] = useState(true);
   const [draggedItem, setDraggedItem] = useState<string | null>(null);
   const [dragOverItem, setDragOverItem] = useState<string | null>(null);
-
-  const syncTime = new Date().toLocaleTimeString('pt-BR', {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-
-  const statusCards = [
-    {
-      id: 'email',
-      icon: 'mail',
-      iconColor: '#1890ff',
-      title: 'E-mails',
-      pill: { label: '3 novos', color: '#1890ff' },
-      total: 8,
-      subtitle: 'na caixa de entrada',
-    },
-    {
-      id: 'processos',
-      icon: 'assignment',
-      iconColor: '#52c41a',
-      title: 'Processos',
-      pill: { label: '4 pendentes', color: '#fa8c16' },
-      total: 12,
-      subtitle: 'em andamento',
-    },
-    {
-      id: 'noticias',
-      icon: 'newspaper',
-      iconColor: '#722ed1',
-      title: 'Notícias',
-      pill: { label: '2 novas', color: '#52c41a' },
-      total: 5,
-      subtitle: 'publicadas hoje',
-    },
-    {
-      id: 'agenda',
-      icon: 'calendar_today',
-      iconColor: '#fa8c16',
-      title: 'Agenda',
-      pill: { label: '3 hoje', color: '#1890ff' },
-      total: 3,
-      subtitle: 'eventos agendados',
-    },
-  ];
 
   if (items.length === 0) {
     return null;
@@ -159,92 +114,7 @@ export const FavoriteCards: React.FC<FavoriteCardsProps> = ({ items, onRemove, o
 
       {/* Cards */}
       {isExpanded && (
-        <>
-          <div className="px-6 py-5">
-            <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
-              {statusCards.map(card => (
-                <Col xs={24} sm={12} lg={6} key={card.id}>
-                  <Card
-                    style={{
-                      borderRadius: '8px',
-                      border: '1px solid #f0f0f0',
-                      boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-                      padding: '0',
-                    }}
-                    bodyStyle={{ padding: '16px 20px' }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                        <span
-                          className="material-icons"
-                          style={{ color: card.iconColor, fontSize: '24px', marginRight: 8 }}
-                        >
-                          {card.icon}
-                        </span>
-                        <span style={{
-                          fontFamily: "'Roboto', sans-serif",
-                          fontSize: 18,
-                          fontWeight: 500,
-                          color: '#262626',
-                          flex: 1,
-                        }}>
-                          {card.title}
-                        </span>
-                      </div>
-                      <Tag style={{
-                        background: card.pill.color,
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '10px',
-                        fontSize: '12px',
-                        fontWeight: 500,
-                        padding: '2px 8px',
-                        margin: 0,
-                      }}>
-                        {card.pill.label}
-                      </Tag>
-                    </div>
-
-                    <div style={{
-                      fontFamily: "'Roboto', sans-serif",
-                      fontSize: 32,
-                      fontWeight: 700,
-                      color: '#262626',
-                      lineHeight: 1.2,
-                      marginBottom: 4,
-                    }}>
-                      {card.total}
-                    </div>
-
-                    <div style={{
-                      fontFamily: "'Roboto', sans-serif",
-                      fontSize: 13,
-                      color: '#8c8c8c',
-                      marginBottom: 12,
-                    }}>
-                      {card.subtitle}
-                    </div>
-
-                    <div style={{ borderTop: '1px solid #f0f0f0', margin: '0 0 8px 0' }} />
-
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 4,
-                      fontSize: 12,
-                      color: '#bfbfbf',
-                      fontFamily: "'Roboto', sans-serif",
-                    }}>
-                      <span className="material-icons" style={{ fontSize: 12 }}>sync</span>
-                      Sincronizado às {syncTime}
-                    </div>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </div>
-
-          <div className="px-6 py-5 overflow-x-auto">
+        <div className="px-6 py-5 overflow-x-auto">
             <div className="flex items-start gap-4" style={{ minWidth: 'max-content' }}>
               {items
                 .sort((a, b) => a.order - b.order)

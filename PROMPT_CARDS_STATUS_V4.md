@@ -1,3 +1,46 @@
+# PROMPT — CARDS DE STATUS DA HOME (VERSÃO CORRIGIDA)
+# Cole no Claude Code ou extensão do VS Code
+
+## REGRA ABSOLUTA
+Aplicar SOMENTE as alterações descritas abaixo.
+NÃO usar Ant Design (antd) — o projeto usa shadcn/ui + Tailwind.
+NÃO alterar regras de negócio.
+NÃO alterar Header, Sidebar, módulo de e-mails ou qualquer outro componente.
+NÃO inserir os cards dentro do componente FavoriteCards ou AtalhoRapidos.
+Manter Material Icons já instalados no projeto.
+Manter fonte Roboto já aplicada.
+
+---
+
+## PASSO 1 — BRANCH
+
+git checkout -b feature/cards-status-home-v3
+
+---
+
+## PASSO 2 — LEIA ANTES DE EDITAR
+
+Leia obrigatoriamente:
+- ./src/components/FavoriteCards.tsx
+- ./src/components/CustomizableHome.tsx
+- ./src/App.tsx
+- ./src/App.css
+- ./src/styles/globals.css
+
+Identifique EXATAMENTE onde na home os cards devem ser inseridos:
+DEPOIS do componente FavoriteCards/AtalhoRapidos
+ANTES do módulo de E-mails
+Fora do componente FavoriteCards — são componentes SEPARADOS e INDEPENDENTES
+
+---
+
+## PASSO 3 — CRIAR COMPONENTE StatusCards.tsx
+
+Criar arquivo novo: ./src/components/StatusCards.tsx
+
+### ESTRUTURA DO COMPONENTE
+
+```tsx
 import React, { useState } from 'react'
 import { MaterialIcon } from './MaterialIcon'
 
@@ -70,7 +113,7 @@ export const StatusCards: React.FC = () => {
     <div
       style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gridTemplateColumns: 'repeat(4, 1fr)',
         gap: '16px',
         margin: '16px 0 24px 0',
       }}
@@ -83,20 +126,26 @@ export const StatusCards: React.FC = () => {
           style={{
             background: '#ffffff',
             borderRadius: '8px',
-            border: hoveredId === card.id ? '1px solid #1890ff' : '1px solid #f0f0f0',
-            boxShadow: hoveredId === card.id ? '0 4px 12px rgba(24,144,255,0.12)' : '0 1px 4px rgba(0,0,0,0.06)',
+            border: hoveredId === card.id
+              ? '1px solid #1890ff'
+              : '1px solid #f0f0f0',
+            boxShadow: hoveredId === card.id
+              ? '0 4px 12px rgba(24,144,255,0.12)'
+              : '0 1px 4px rgba(0,0,0,0.06)',
             padding: '20px',
             cursor: 'pointer',
             transition: 'all 0.2s ease',
             transform: hoveredId === card.id ? 'translateY(-2px)' : 'translateY(0)',
           }}
         >
+          {/* Topo: ícone + título + pill */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             marginBottom: '16px',
           }}>
+            {/* Ícone com fundo colorido */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
@@ -118,6 +167,7 @@ export const StatusCards: React.FC = () => {
                   {card.icon}
                 </span>
               </div>
+              {/* Título */}
               <span style={{
                 fontFamily: "'Roboto', sans-serif",
                 fontSize: '18px',
@@ -128,6 +178,7 @@ export const StatusCards: React.FC = () => {
               </span>
             </div>
 
+            {/* Pill */}
             <span style={{
               background: card.pill.color,
               color: '#ffffff',
@@ -142,6 +193,7 @@ export const StatusCards: React.FC = () => {
             </span>
           </div>
 
+          {/* Número principal */}
           <div style={{
             fontFamily: "'Roboto', sans-serif",
             fontSize: '36px',
@@ -153,6 +205,7 @@ export const StatusCards: React.FC = () => {
             {card.total}
           </div>
 
+          {/* Subtexto */}
           <div style={{
             fontFamily: "'Roboto', sans-serif",
             fontSize: '13px',
@@ -162,11 +215,13 @@ export const StatusCards: React.FC = () => {
             {card.subtitle}
           </div>
 
+          {/* Separador */}
           <div style={{
             borderTop: '1px solid #f0f0f0',
             marginBottom: '10px',
           }} />
 
+          {/* Rodapé sincronização */}
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -187,3 +242,93 @@ export const StatusCards: React.FC = () => {
 }
 
 export default StatusCards
+```
+
+---
+
+## PASSO 4 — INSERIR O COMPONENTE NA HOME
+
+Encontre o arquivo que renderiza a home (CustomizableHome.tsx ou App.tsx).
+
+Localize EXATAMENTE onde o FavoriteCards é renderizado.
+Insira o StatusCards LOGO APÓS o FavoriteCards e ANTES do módulo de e-mails.
+
+```tsx
+// Adicionar import no topo do arquivo:
+import { StatusCards } from './StatusCards'
+
+// Inserir na renderização, APÓS FavoriteCards e ANTES de EmailsModule:
+<FavoriteCards ... />
+<StatusCards />        {/* ← INSERIR AQUI */}
+<EmailsModule ... />
+```
+
+NÃO inserir dentro do FavoriteCards.
+NÃO mover ou alterar o FavoriteCards.
+NÃO alterar o EmailsModule.
+
+---
+
+## PASSO 5 — RESPONSIVIDADE
+
+Adicionar media queries para o grid dos cards:
+
+```css
+/* Em telas menores que 1024px: 2 colunas */
+@media (max-width: 1024px) {
+  .status-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Em telas menores que 640px: 1 coluna */
+@media (max-width: 640px) {
+  .status-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+OU usar estilo inline com CSS Grid responsivo:
+```tsx
+gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))'
+```
+
+---
+
+## PASSO 6 — REMOVER CÓDIGO ANTIGO COM ERROS
+
+Se existirem imports de "antd" no FavoriteCards.tsx ou em qualquer outro
+arquivo que estava causando erros de build, REMOVER esses imports.
+
+Buscar em todo o projeto por:
+- `import { Card, Row, Col, Tag } from 'antd'`
+- `import { Card } from 'antd'`
+- Qualquer import de "antd"
+
+Remover todos esses imports e substituir pela implementação nativa
+já descrita neste prompt.
+
+---
+
+## PASSO 7 — VALIDAÇÃO
+
+Confirmar que:
+[ ] Build passa sem erros (npm run dev)
+[ ] 4 cards aparecem ABAIXO de "Atalhos Rápidos"
+[ ] 4 cards aparecem ACIMA do módulo de e-mails
+[ ] Cards NÃO estão dentro do componente FavoriteCards
+[ ] Cada card tem: ícone colorido com fundo, título 18px, pill, número grande, subtexto, rodapé sync
+[ ] Hover: borda azul + sombra suave + leve elevação (translateY -2px)
+[ ] Títulos são: "E-mail", "Processos", "Notícias", "Agenda" (sem redundância)
+[ ] Ícones Material Icons corretos por card
+[ ] Sem imports de "antd" no projeto
+[ ] Nenhum outro componente foi alterado
+
+---
+
+## PASSO 8 — COMMIT
+
+git add .
+git commit -m "feat: cards status dashboard - abaixo de atalhos, hover, sem antd"
+git push origin feature/cards-status-home-v3
