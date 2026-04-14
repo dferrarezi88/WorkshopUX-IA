@@ -12,6 +12,7 @@ import { CustomizeDrawer } from './components/CustomizeDrawer';
 import { FavoriteCards, FavoriteItem } from './components/FavoriteCards';
 import { RoomColorConfig } from './components/RoomColorConfig'; // ALTERAÇÃO 2
 import { ToastSystem, useToast } from './components/ToastSystem'; // FEATURE 1
+import { MaterialIcon } from './components/MaterialIcon';
 
 export type UserProfile = 'colaborador' | 'lider' | 'admin';
 
@@ -249,7 +250,22 @@ function App() {
   }, [hasShownLoginToast, showToast]);
 
   // CORREÇÃO 2: State para armazenar status dos eventos
-  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED'>>({});
+  const [eventStatuses, setEventStatuses] = useState<Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT'>>({});
+
+  const handleSendEditRequest = (eventId: string, requestType: 'edit' | 'cancel') => {
+    setEventStatuses(prev => ({
+      ...prev,
+      [eventId]: 'PENDING_EDIT',
+    }));
+
+    showToast({
+      type: 'success',
+      title: 'Solicitação enviada ao organizador',
+      message: 'Solicitação enviada ao organizador',
+      autoDismiss: true,
+      duration: 4000,
+    });
+  };
 
   // CORREÇÃO 2: Handlers para aceitar/recusar convite - ATUALIZA O STATUS
   const handleAcceptInvite = () => {
@@ -352,9 +368,11 @@ function App() {
       {agendaViewMode === 'secretaria' ? (
         <DrawerAgendamentoSecretaria 
           event={selectedEvent}
+          eventStatus={selectedEvent ? eventStatuses[selectedEvent.id] : undefined}
           onClose={handleCloseDrawer}
           isEventOrganizer={selectedEvent?.organizer === user.name}
           onEdit={handleEditEvent}
+          onSendEditRequest={handleSendEditRequest}
           isInvitePending={selectedEvent?.inviteStatus === 'PENDING' && selectedEvent?.organizer !== user.name}
           onAcceptInvite={handleAcceptInvite}
           onDeclineInvite={handleDeclineInvite}
