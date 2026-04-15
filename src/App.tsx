@@ -442,7 +442,7 @@ function App() {
       <CreateEventModal
         isOpen={showEditModal}
         onClose={handleCloseEditModal}
-        initialDate={editingEvent?.start || null}
+        initialDate={editingEvent?.date || null}
         userProfile={user.profile}
         roomColors={roomColors}
         onOpenRoomColorConfig={() => setShowRoomColorConfig(true)}
