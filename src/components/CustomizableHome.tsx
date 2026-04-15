@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CalendarModule } from './CalendarModule';
+import { StatusCards } from './StatusCards';
 import { NewsModule } from './NewsModule';
 import { EmailsModule } from './EmailsModule';
 import { ManagerialViewModule } from './ManagerialViewModule';
@@ -50,8 +51,6 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
       switch (moduleId) {
         case 'calendar':
           return (
-            <>
-              <StatusCards />
               <CalendarModule
                 expanded={calendarExpanded}
                 onToggleExpand={() => setCalendarExpanded(!calendarExpanded)}
@@ -65,7 +64,7 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
                 eventStatuses={eventStatuses}
                 currentUser={user.name}
               />
-            </>
+            
           );
         case 'news':
           return <NewsModule />;
@@ -83,6 +82,7 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
 
   return (
     <div className="space-y-6">
+       <StatusCards />
       {visibleModules.map((module) => renderModule(module.id as ModuleId))}
       
       {visibleModules.length === 0 && (

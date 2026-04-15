@@ -18,10 +18,13 @@ export const StatusCards: React.FC = () => {
           onMouseEnter={() => setHoveredId(card.id)}
           onMouseLeave={() => setHoveredId(null)}
           style={{
-            background: '#ffffff', borderRadius: '8px',
+            background: '#ffffff',
+            borderRadius: '8px',
             border: hoveredId === card.id ? '1px solid #91caff' : '1px solid #f0f0f0',
             boxShadow: hoveredId === card.id ? '0 4px 12px rgba(24,144,255,0.10)' : '0 1px 3px rgba(0,0,0,0.04)',
-            padding: '20px', cursor: 'pointer', transition: 'all 0.2s ease',
+            padding: '20px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
             transform: hoveredId === card.id ? 'translateY(-2px)' : 'translateY(0)',
           }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
@@ -43,4 +46,9 @@ export const StatusCards: React.FC = () => {
             Sincronizado às {syncTime}
           </div>
         </div>
-      ))
+      ))}
+    </div>
+  )
+}
+
+export default StatusCards
