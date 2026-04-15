@@ -3,6 +3,61 @@ import { MaterialIcon } from './MaterialIcon'; // CORREÇÃO 1: Material Design 
 import type { CalendarEvent } from '../App';
 import type { UserProfile } from '../App';
 
+// Componente de pill de status
+const StatusPill: React.FC<{ status: string }> = ({ status }) => {
+  const styles: Record<string, { bg: string; border: string; color: string; label: string }> = {
+    PENDING: {
+      bg: '#fffbe6',
+      border: '1px solid #ffe58f',
+      color: '#ad6800',
+      label: 'Pendente',
+    },
+    PENDING_EDIT: {
+      bg: '#e6f4ff',
+      border: '1px solid #91caff',
+      color: '#0958d9',
+      label: 'Pendente Alteração',
+    },
+    CANCELED: {
+      bg: '#fff2f0',
+      border: '1px solid #ffccc7',
+      color: '#cf1322',
+      label: 'Cancelado',
+    },
+    ACCEPTED: {
+      bg: '#f6ffed',
+      border: '1px solid #b7eb8f',
+      color: '#389e0d',
+      label: 'Confirmado',
+    },
+    DECLINED: {
+      bg: '#fff2f0',
+      border: '1px solid #ffccc7',
+      color: '#cf1322',
+      label: 'Recusado',
+    },
+  }
+
+  const style = styles[status]
+  if (!style) return null
+
+  return (
+    <span style={{
+      background: style.bg,
+      border: style.border,
+      color: style.color,
+      fontSize: '10px',
+      fontWeight: 600,
+      padding: '2px 6px',
+      borderRadius: '10px',
+      whiteSpace: 'nowrap',
+      display: 'inline-block',
+    }}>
+      {style.label}
+    </span>
+  )
+}
+
 interface CalendarModuleProps {
   expanded: boolean;
   onToggleExpand: () => void;
@@ -270,6 +325,21 @@ const mockEvents: CalendarEvent[] = [
     water: true,
     coffee: false,
   },
+  {
+    id: '17',
+    title: 'Reunião Cancelada - Exemplo',
+    date: new Date(2026, 1, 19),
+    startTime: '15:00',
+    endTime: '16:00',
+    room: 'Sala 03',
+    organizer: 'João Silva',
+    responsible: 'João Silva',
+    participants: 4,
+    participantNames: ['João Silva', 'Maria Santos'],
+    water: false,
+    coffee: false,
+    inviteStatus: 'CANCELED',
+  },
 ];
 
 export const CalendarModule: React.FC<CalendarModuleProps> = ({ 
@@ -294,7 +364,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
   const weekDaysShort = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   // Função para obter o status atual do evento (prioriza eventStatuses)
-  const getEventStatus = (event: CalendarEvent): 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT' | undefined => {
+  const getEventStatus = (event: CalendarEvent): 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT' | 'CANCELED' | undefined => {
     return eventStatuses[event.id] || event.inviteStatus;
   };
 
@@ -639,6 +709,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                         const isPendingEdit = currentStatus === 'PENDING_EDIT';
                         const isAccepted = currentStatus === 'ACCEPTED';
                         const isDeclined = currentStatus === 'DECLINED';
+                        const isCanceled = currentStatus === 'CANCELED';
                         
                         return (
                           <div
@@ -656,20 +727,19 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                               />
                             )}
                             
-                            {/* CORREÇÃO 3: Indicador de status */}
-                            {isPendingEdit && (
-                              <div className="absolute top-3 right-3 px-2 py-1 bg-yellow-100 border border-yellow-300 rounded-full text-[11px] font-medium text-yellow-800 z-10">
-                                Pendente de edição
+                            {/* Overlay para eventos cancelados */}
+                            {isCanceled && (
+                              <div
+                                className="absolute inset-0 rounded pointer-events-none"
+                                style={{ background: 'rgba(255,255,255,0.5)' }}
+                              />
+                            )}
+                            
+                            {/* Pill de status */}
+                            {currentStatus && (
+                              <div className="absolute top-2 right-2 z-10">
+                                <StatusPill status={currentStatus} />
                               </div>
-                            )}
-                            {!isPendingEdit && isPendingInvite && (
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 border-2 border-white rounded-full z-10"></div>
-                            )}
-                            {isAccepted && (
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full z-10"></div>
-                            )}
-                            {isDeclined && (
-                              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full z-10"></div>
                             )}
                             
                             <div onClick={() => onEventClick(event)} className="relative z-10">
@@ -802,6 +872,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             const isPendingEdit = currentStatus === 'PENDING_EDIT';
                             const isAccepted = currentStatus === 'ACCEPTED';
                             const isDeclined = currentStatus === 'DECLINED';
+                            const isCanceled = currentStatus === 'CANCELED';
                             
                             return (
                               <div
@@ -823,20 +894,19 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                                   />
                                 )}
                                 
-                                {/* CORREÇÃO 3: Indicador de status */}
-                                {isPendingEdit && (
-                                  <div className="absolute top-3 right-3 px-2 py-1 bg-yellow-100 border border-yellow-300 rounded-full text-[11px] font-medium text-yellow-800 z-10">
-                                    Pendente de edição
+                                {/* Overlay para eventos cancelados */}
+                                {isCanceled && (
+                                  <div
+                                    className="absolute inset-0 rounded pointer-events-none"
+                                    style={{ background: 'rgba(255,255,255,0.5)' }}
+                                  />
+                                )}
+                                
+                                {/* Pill de status */}
+                                {currentStatus && (
+                                  <div className="absolute top-2 right-2 z-10">
+                                    <StatusPill status={currentStatus} />
                                   </div>
-                                )}
-                                {!isPendingEdit && isPendingInvite && (
-                                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 border-2 border-white rounded-full z-10"></div>
-                                )}
-                                {isAccepted && (
-                                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full z-10"></div>
-                                )}
-                                {isDeclined && (
-                                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 border-2 border-white rounded-full z-10"></div>
                                 )}
                                 
                                 <div className="relative z-10">
@@ -965,6 +1035,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                         const isPendingEdit = currentStatus === 'PENDING_EDIT';
                         const isAccepted = currentStatus === 'ACCEPTED';
                         const isDeclined = currentStatus === 'DECLINED';
+                        const isCanceled = currentStatus === 'CANCELED';
                         
                         return (
                           <div
@@ -976,20 +1047,20 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             className="px-2 py-1.5 rounded text-xs cursor-pointer hover:opacity-90 transition-opacity relative"
                             style={{ backgroundColor: getRoomColor(event.room) }}
                           >
-                            {/* CORREÇÃO 3: Indicador de status */}
-                            {isPendingEdit && (
-                              <div className="absolute top-2 right-2 px-2 py-0.5 bg-yellow-100 border border-yellow-300 rounded-full text-[10px] font-medium text-yellow-800">
-                                Pendente de edição
-                              </div>
+                            {/* Overlay para eventos cancelados */}
+                            {isCanceled && (
+                              <div
+                                className="absolute inset-0 rounded pointer-events-none"
+                                style={{ background: 'rgba(255,255,255,0.5)' }}
+                              />
                             )}
-                            {!isPendingEdit && isPendingInvite && (
-                              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-yellow-400 border border-white rounded-full"></div>
+                            
+                            {/* Pill de status */}
+                            {currentStatus && currentStatus !== 'ACCEPTED' && (
+                              <StatusPill status={currentStatus} />
                             )}
-                            {isAccepted && (
-                              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border border-white rounded-full"></div>
-                            )}
-                            {isDeclined && (
-                              <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-red-500 border border-white rounded-full"></div>
+                            {currentStatus === 'ACCEPTED' && (
+                              <StatusPill status="ACCEPTED" />
                             )}
                             
                             {/* Horário e Nome - CORREÇÃO 1: Material Icons */}
