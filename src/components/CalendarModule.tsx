@@ -686,7 +686,13 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                       Clique para criar agendamento
                     </div>
                   ) : (
-                    <div className="space-y-2">
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      gap: '8px',
+                      alignItems: 'flex-start',
+                      width: '100%',
+                    }}>
                       {eventsInSlot.map(event => {
                         const visibility = getEventVisibility(event);
                         const displayTitle = visibility.type === 'busy' ? 'Horário ocupado' : event.title;
@@ -715,7 +721,11 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                           <div
                             key={event.id}
                             className="p-3 rounded-lg cursor-pointer hover:opacity-90 transition-opacity relative"
-                            style={{ backgroundColor: getRoomColor(event.room) }}
+                            style={{
+                              backgroundColor: getRoomColor(event.room),
+                              flex: '1 1 0',
+                              minWidth: '0',
+                            }}
                           >
                             {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
                             {(isPendingInvite || isPendingEdit) && (
