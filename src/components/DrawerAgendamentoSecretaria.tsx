@@ -1,39 +1,29 @@
 import React, { useState } from 'react';
 import { X, Calendar, Clock, MapPin, Users, Droplet, Coffee, AlertCircle, User, Edit } from 'lucide-react';
-import { MaterialIcon } from './MaterialIcon';
 import type { CalendarEvent } from '../App';
 
 interface DrawerAgendamentoSecretariaProps {
   event: CalendarEvent | null;
-  eventStatus?: 'PENDING' | 'ACCEPTED' | 'DECLINED' | 'PENDING_EDIT';
   onClose: () => void;
   isEventOrganizer?: boolean; // ALTERAÇÃO 5
   onEdit?: () => void; // ALTERAÇÃO 5: callback para abrir modal de edição
-  onSendEditRequest?: (eventId: string, requestType: 'edit' | 'cancel') => void;
   isInvitePending?: boolean; // FEATURE 2: indica se é convite pendente
   onAcceptInvite?: () => void; // FEATURE 2: callback para aceitar convite
   onDeclineInvite?: () => void; // FEATURE 2: callback para recusar convite
-  onRequestEdit?: (requestType: 'alteracao' | 'cancelamento', justification: string) => void; // Nova: callback para solicitar alteração
 }
 
 export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaProps> = ({ 
   event, 
-  eventStatus,
   onClose,
   isEventOrganizer = false,
   onEdit,
-  onSendEditRequest,
   isInvitePending = false,
   onAcceptInvite,
-  onDeclineInvite,
-  onRequestEdit
+  onDeclineInvite
 }) => {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancelMessage, setCancelMessage] = useState('');
   const [showCancelSuccess, setShowCancelSuccess] = useState(false);
-  const [showRequestModal, setShowRequestModal] = useState(false);
-  const [justification, setJustification] = useState('');
-  const [requestError, setRequestError] = useState('');
 
   if (!event) return null;
 
@@ -52,13 +42,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
     }, 3000);
   };
 
-  const handleSubmitRequest = () => {
-    if (justification.trim().length < 10) return;
-    onRequestEdit?.('alteracao', justification);
-    setShowRequestModal(false);
-    setJustification('');
-  };
-
   const formatDate = (date: Date) => {
     return date.toLocaleDateString('pt-BR', { 
       weekday: 'long', 
@@ -66,26 +49,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
       month: 'long', 
       day: 'numeric' 
     });
-  };
-
-  const hasPendingEditRequest = eventStatus === 'PENDING_EDIT';
-  const isCanceled = event.canceled === true || eventStatus === 'CANCELED';
-
-  const handleRequestClick = () => {
-    setRequestError('');
-    setShowRequestModal(true);
-  };
-
-  const handleSendRequest = () => {
-    if (justification.trim().length < 10) {
-      setRequestError('A justificativa deve ter pelo menos 10 caracteres.');
-      return;
-    }
-
-    onSendEditRequest?.(event.id, 'edit');
-    setShowRequestModal(false);
-    setJustification('');
-    setRequestError('');
   };
 
   return (
@@ -234,8 +197,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
 
           {/* ÁREA DE AÇÕES DO DRAWER */}
           <div className="mt-8 pt-6 border-t border-gray-200 space-y-3">
-            
-
             {/* BOTÕES CONVITE PENDENTE - FEATURE 2 */}
             {isInvitePending && (
               <div className="space-y-3">
@@ -263,26 +224,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
             {/* BOTÕES PARA SECRETARIA - SEM CONVITE PENDENTE */}
             {!isInvitePending && (
               <>
-                {/* BOTÃO SOLICITAR ALTERAÇÃO/CANCELAMENTO */}
-                {event.status !== 'pendente-edicao' && event.status !== 'cancelada' && onRequestEdit && (
-                  <button
-                    onClick={() => setShowRequestModal(true)}
-                    className="w-full px-4 py-3 bg-white text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center justify-center gap-2"
-                  >
-                    <MaterialIcon name="edit_calendar" size={20} />
-                    Solicitar alteração ou cancelamento
-                  </button>
-                )}
-
-                {/* TEXTO QUANDO JÁ SOLICITADO */}
-                {event.status === 'pendente-edicao' && (
-                  <div className="w-full px-4 py-3 bg-yellow-50 border border-yellow-200 rounded-lg text-center">
-                    <p className="text-sm text-yellow-800 font-medium">
-                      Solicitação já enviada. Aguardando ação do organizador.
-                    </p>
-                  </div>
-                )}
-
                 {/* BOTÃO EDITAR - ALTERAÇÃO 5 (apenas se for organizador) */}
                 {isEventOrganizer && onEdit && (
                   <button
@@ -318,6 +259,9 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">Cancelar Agendamento</h3>
+                <p className="text-sm text-gray-600">
+                  Esta ação não pode ser desfeita. Todos os participantes serão notificados por e-mail.
+                </p>
               </div>
             </div>
 
@@ -351,18 +295,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
           </div>
         </div>
       )}
-              </button>
-              <button
-                onClick={handleSendRequest}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-              >
-                Enviar solicitação
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
     </>
   );
 };

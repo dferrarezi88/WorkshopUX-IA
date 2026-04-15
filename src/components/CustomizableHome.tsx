@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { CalendarModule } from './CalendarModule';
-import { StatusCards } from './StatusCards';
 import { NewsModule } from './NewsModule';
 import { EmailsModule } from './EmailsModule';
 import { ManagerialViewModule } from './ManagerialViewModule';
@@ -18,7 +17,6 @@ interface CustomizableHomeProps {
   onAcceptInvite?: () => void; // CORREÇÃO 2: Agora sem parâmetro, usa evento selecionado
   onDeclineInvite?: () => void; // CORREÇÃO 2: Agora sem parâmetro, usa evento selecionado
   eventStatuses?: Record<string, 'PENDING' | 'ACCEPTED' | 'DECLINED'>; // Status dos eventos
-  onNavigateToEmail?: () => void;
 }
 
 type ModuleId = 'calendar' | 'news' | 'emails' | 'managerial';
@@ -35,7 +33,6 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
   onAcceptInvite, // CORREÇÃO 2
   onDeclineInvite, // CORREÇÃO 2
   eventStatuses = {}, // Status dos eventos
-  onNavigateToEmail,
 }) => {
   const [calendarExpanded, setCalendarExpanded] = useState(false);
 
@@ -51,25 +48,24 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
       switch (moduleId) {
         case 'calendar':
           return (
-              <CalendarModule
-                expanded={calendarExpanded}
-                onToggleExpand={() => setCalendarExpanded(!calendarExpanded)}
-                onEventClick={onEventClick}
-                onCreateEvent={onCreateEvent}
-                userProfile={user.profile}
-                agendaViewMode={agendaViewMode}
-                onAgendaViewModeChange={onAgendaViewModeChange}
-                roomColors={roomColors}
-                onOpenRoomColorConfig={onOpenRoomColorConfig}
-                eventStatuses={eventStatuses}
-                currentUser={user.name}
-              />
-            
+            <CalendarModule
+              expanded={calendarExpanded}
+              onToggleExpand={() => setCalendarExpanded(!calendarExpanded)}
+              onEventClick={onEventClick}
+              onCreateEvent={onCreateEvent}
+              userProfile={user.profile}
+              agendaViewMode={agendaViewMode}
+              onAgendaViewModeChange={onAgendaViewModeChange}
+              roomColors={roomColors}
+              onOpenRoomColorConfig={onOpenRoomColorConfig}
+              eventStatuses={eventStatuses}
+              currentUser={user.name}
+            />
           );
         case 'news':
           return <NewsModule />;
         case 'emails':
-          return <EmailsModule onNavigateToEmail={onNavigateToEmail} />;
+          return <EmailsModule />;
         case 'managerial':
           return <ManagerialViewModule profile={user.profile} />;
         default:
@@ -82,7 +78,6 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
 
   return (
     <div className="space-y-6">
-       <StatusCards />
       {visibleModules.map((module) => renderModule(module.id as ModuleId))}
       
       {visibleModules.length === 0 && (
