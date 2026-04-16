@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CalendarModule } from './CalendarModule';
 import { NewsModule } from './NewsModule';
 import { EmailsModule } from './EmailsModule';
+import { StatusCards } from './StatusCards';
 import { ManagerialViewModule } from './ManagerialViewModule';
 import type { User, ModuleConfig, CalendarEvent } from '../App';
 
