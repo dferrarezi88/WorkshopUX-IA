@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { X, Calendar, Clock, MapPin, Users, Droplet, Coffee, AlertCircle, User, Edit } from 'lucide-react';
 import { MaterialIcon } from './MaterialIcon';
 import type { CalendarEvent } from '../App';
 
@@ -72,14 +71,14 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
           <div className="flex items-start justify-between mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 pr-8">{event.title}</h2>
             <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <X size={20} />
+              <span className="material-icons" style={{fontSize:'20px'}}>close</span>
             </button>
           </div>
 
           {showCancelSuccess && (
             <div className="mb-6 p-4 bg-red-50 border-2 border-red-500 rounded-lg">
               <div className="flex items-start gap-3">
-                <AlertCircle size={24} className="text-red-600 flex-shrink-0" />
+                <span className="material-icons flex-shrink-0" style={{fontSize:'24px',color:'#dc2626'}}>error_outline</span>
                 <div>
                   <p className="text-base font-bold text-red-900 mb-1">Agendamento Cancelado</p>
                   <p className="text-sm text-red-800">O compromisso foi cancelado e os participantes foram notificados.</p>
@@ -91,7 +90,7 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
           <div className="space-y-6">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
-                <Calendar size={20} className="text-purple-600" />
+                <span className="material-icons" style={{fontSize:'20px',color:'#7c3aed'}}>calendar_today</span>
               </div>
               <div>
                 <div className="text-sm text-gray-500 mb-1">Data</div>
@@ -101,7 +100,7 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
 
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
-                <Clock size={20} className="text-green-600" />
+                <span className="material-icons" style={{fontSize:'20px',color:'#16a34a'}}>schedule</span>
               </div>
               <div>
                 <div className="text-sm text-gray-500 mb-1">Horário</div>
@@ -111,7 +110,7 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
 
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center flex-shrink-0">
-                <MapPin size={20} className="text-orange-600" />
+                <span className="material-icons" style={{fontSize:'20px',color:'#ea580c'}}>place</span>
               </div>
               <div>
                 <div className="text-sm text-gray-500 mb-1">Sala</div>
@@ -121,7 +120,7 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
 
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
-                <User size={20} className="text-blue-600" />
+                <span className="material-icons" style={{fontSize:'20px',color:'#2563eb'}}>person</span>
               </div>
               <div>
                 <div className="text-sm text-gray-500 mb-1">Responsável</div>
@@ -131,7 +130,7 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
 
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center flex-shrink-0">
-                <Users size={20} className="text-teal-600" />
+                <span className="material-icons" style={{fontSize:'20px',color:'#0d9488'}}>group</span>
               </div>
               <div>
                 <div className="text-sm text-gray-500 mb-1">Participantes</div>
@@ -144,13 +143,13 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
               <div className="flex flex-wrap gap-2">
                 {event.water && (
                   <div className="flex items-center gap-2 px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg">
-                    <Droplet size={18} className="text-blue-600" />
+                    <span className="material-icons" style={{fontSize:'18px',color:'#2563eb'}}>water_drop</span>
                     <span className="text-sm font-medium text-blue-900">Água</span>
                   </div>
                 )}
                 {event.coffee && (
                   <div className="flex items-center gap-2 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg">
-                    <Coffee size={18} className="text-amber-600" />
+                    <span className="material-icons" style={{fontSize:'18px',color:'#d97706'}}>coffee</span>
                     <span className="text-sm font-medium text-amber-900">Café</span>
                   </div>
                 )}
@@ -203,13 +202,13 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
                 {isEventOrganizer && onEdit && (
                   <button onClick={onEdit}
                     className="w-full px-4 py-3 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors font-medium flex items-center justify-center gap-2">
-                    <Edit size={20} />
+                    <span className="material-icons" style={{fontSize:'20px'}}>edit</span>
                     Editar agendamento
                   </button>
                 )}
                 <button onClick={handleCancel}
                   className="w-full px-4 py-3 bg-red-50 text-red-700 border border-red-200 rounded-lg hover:bg-red-100 transition-colors font-medium flex items-center justify-center gap-2">
-                  <AlertCircle size={20} />
+                  <span className="material-icons" style={{fontSize:'20px'}}>error_outline</span>
                   Cancelar agendamento
                 </button>
               </>
@@ -223,7 +222,7 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
           <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
             <div className="flex items-start gap-4 mb-6">
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                <AlertCircle size={24} className="text-red-600" />
+                <span className="material-icons" style={{fontSize:'24px',color:'#dc2626'}}>error_outline</span>
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1">Cancelar Agendamento</h3>

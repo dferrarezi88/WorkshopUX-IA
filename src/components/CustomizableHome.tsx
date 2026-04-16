@@ -79,7 +79,13 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div style={{
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '24px',
+    }}>
+      <StatusCards />
       {visibleModules.map((module) => renderModule(module.id as ModuleId))}
       
       {visibleModules.length === 0 && (

@@ -722,11 +722,32 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                             key={event.id}
                             className="p-3 rounded-lg cursor-pointer hover:opacity-90 transition-opacity relative"
                             style={{
-                              backgroundColor: getRoomColor(event.room),
+                              backgroundColor: isPendingEdit ? '#fff2f0' : getRoomColor(event.room),
+                              borderLeft: isPendingEdit ? '4px solid #ff4d4f' : 'none',
+                              boxShadow: isPendingEdit
+                                ? '0 0 0 2px #ffccc7, 0 2px 8px rgba(255,77,79,0.15)'
+                                : 'none',
+                              position: 'relative',
+                              transition: 'all 0.2s ease',
                               flex: '1 1 0',
                               minWidth: '0',
                             }}
                           >
+                            {isPendingEdit && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '4px',
+                                left: '4px',
+                                zIndex: 20,
+                              }}>
+                                <span className="material-icons" style={{
+                                  fontSize: '14px',
+                                  color: '#ff4d4f',
+                                }}>
+                                  warning
+                                </span>
+                              </div>
+                            )}
                             {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
                             {(isPendingInvite || isPendingEdit) && (
                               <div 
@@ -892,8 +913,31 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                                   if (!isPendingInvite) onEventClick(event);
                                 }}
                                 className="p-2 rounded text-xs cursor-pointer hover:opacity-90 transition-opacity relative"
-                                style={{ backgroundColor: getRoomColor(event.room) }}
+                                style={{
+                                  backgroundColor: isPendingEdit ? '#fff2f0' : getRoomColor(event.room),
+                                  borderLeft: isPendingEdit ? '4px solid #ff4d4f' : 'none',
+                                  boxShadow: isPendingEdit
+                                    ? '0 0 0 2px #ffccc7, 0 2px 8px rgba(255,77,79,0.15)'
+                                    : 'none',
+                                  position: 'relative',
+                                  transition: 'all 0.2s ease',
+                                }}
                               >
+                                {isPendingEdit && (
+                                  <div style={{
+                                    position: 'absolute',
+                                    top: '4px',
+                                    left: '4px',
+                                    zIndex: 20,
+                                  }}>
+                                    <span className="material-icons" style={{
+                                      fontSize: '14px',
+                                      color: '#ff4d4f',
+                                    }}>
+                                      warning
+                                    </span>
+                                  </div>
+                                )}
                                 {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
                                 {(isPendingInvite || isPendingEdit) && (
                                   <div 
@@ -1055,8 +1099,31 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                               onEventClick(event);
                             }}
                             className="px-2 py-1.5 rounded text-xs cursor-pointer hover:opacity-90 transition-opacity relative"
-                            style={{ backgroundColor: getRoomColor(event.room) }}
+                            style={{
+                              backgroundColor: isPendingEdit ? '#fff2f0' : getRoomColor(event.room),
+                              borderLeft: isPendingEdit ? '4px solid #ff4d4f' : 'none',
+                              boxShadow: isPendingEdit
+                                ? '0 0 0 2px #ffccc7, 0 2px 8px rgba(255,77,79,0.15)'
+                                : 'none',
+                              position: 'relative',
+                              transition: 'all 0.2s ease',
+                            }}
                           >
+                            {isPendingEdit && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '4px',
+                                left: '4px',
+                                zIndex: 20,
+                              }}>
+                                <span className="material-icons" style={{
+                                  fontSize: '14px',
+                                  color: '#ff4d4f',
+                                }}>
+                                  warning
+                                </span>
+                              </div>
+                            )}
                             {/* Overlay para eventos cancelados */}
                             {isCanceled && (
                               <div
