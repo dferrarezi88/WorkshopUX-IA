@@ -348,10 +348,7 @@ function App() {
               <EmailPage onBack={() => setCurrentPage('home')} />
             </div>
           ) : (
-            <main className="flex-1" style={{
-              padding: '24px',
-              boxSizing: 'border-box',
-            }}>
+            <main className="flex-1 p-6">
               <CustomizableHome
                 user={user}
                 onEventClick={handleEventClick}

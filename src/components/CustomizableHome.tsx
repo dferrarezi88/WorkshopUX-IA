@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { CalendarModule } from './CalendarModule';
 import { NewsModule } from './NewsModule';
 import { EmailsModule } from './EmailsModule';
-import { StatusCards } from './StatusCards';
 import { ManagerialViewModule } from './ManagerialViewModule';
 import type { User, ModuleConfig, CalendarEvent } from '../App';
 
@@ -80,13 +79,7 @@ export const CustomizableHome: React.FC<CustomizableHomeProps> = ({
   };
 
   return (
-    <div style={{
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '24px',
-    }}>
-      <StatusCards />
+    <div className="space-y-6">
       {visibleModules.map((module) => renderModule(module.id as ModuleId))}
       
       {visibleModules.length === 0 && (
