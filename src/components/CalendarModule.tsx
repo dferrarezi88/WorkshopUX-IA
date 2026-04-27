@@ -733,22 +733,7 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                               minWidth: '0',
                             }}
                           >
-                            {isPendingEdit && (
-                              <div style={{
-                                position: 'absolute',
-                                top: '4px',
-                                left: '4px',
-                                zIndex: 20,
-                              }}>
-                                <span className="material-icons" style={{
-                                  fontSize: '14px',
-                                  color: '#ff4d4f',
-                                }}>
-                                  warning
-                                </span>
-                              </div>
-                            )}
-                            {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
+                              {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
                             {(isPendingInvite || isPendingEdit) && (
                               <div 
                                 className="absolute inset-0 rounded pointer-events-none"
@@ -923,21 +908,6 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                                   transition: 'all 0.2s ease',
                                 }}
                               >
-                                {isPendingEdit && (
-                                  <div style={{
-                                    position: 'absolute',
-                                    top: '4px',
-                                    left: '4px',
-                                    zIndex: 20,
-                                  }}>
-                                    <span className="material-icons" style={{
-                                      fontSize: '14px',
-                                      color: '#ff4d4f',
-                                    }}>
-                                      warning
-                                    </span>
-                                  </div>
-                                )}
                                 {/* PARTE 2: Overlay com linhas diagonais para eventos pendentes */}
                                 {(isPendingInvite || isPendingEdit) && (
                                   <div 
@@ -1109,21 +1079,6 @@ export const CalendarModule: React.FC<CalendarModuleProps> = ({
                               transition: 'all 0.2s ease',
                             }}
                           >
-                            {isPendingEdit && (
-                              <div style={{
-                                position: 'absolute',
-                                top: '4px',
-                                left: '4px',
-                                zIndex: 20,
-                              }}>
-                                <span className="material-icons" style={{
-                                  fontSize: '14px',
-                                  color: '#ff4d4f',
-                                }}>
-                                  warning
-                                </span>
-                              </div>
-                            )}
                             {/* Overlay para eventos cancelados */}
                             {isCanceled && (
                               <div

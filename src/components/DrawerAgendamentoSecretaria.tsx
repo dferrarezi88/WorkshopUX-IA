@@ -197,22 +197,6 @@ export const DrawerAgendamentoSecretaria: React.FC<DrawerAgendamentoSecretariaPr
               </div>
             )}
 
-            {!isInvitePending && (
-              <>
-                {isEventOrganizer && onEdit && (
-                  <button onClick={onEdit}
-                    className="w-full px-4 py-3 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors font-medium flex items-center justify-center gap-2">
-                    <span className="material-icons" style={{fontSize:'20px'}}>edit</span>
-                    Editar agendamento
-                  </button>
-                )}
-                <button onClick={handleCancel}
-                  className="w-full px-4 py-3 bg-red-50 text-red-700 border border-red-200 rounded-lg hover:bg-red-100 transition-colors font-medium flex items-center justify-center gap-2">
-                  <span className="material-icons" style={{fontSize:'20px'}}>error_outline</span>
-                  Cancelar agendamento
-                </button>
-              </>
-            )}
           </div>
         </div>
       </div>

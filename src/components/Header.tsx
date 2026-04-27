@@ -28,19 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
           <span className="text-white font-semibold text-lg">Workspace Gov</span>
         </div>
 
-        {/* Search Bar - CORREÇÃO 1: Material Icon */}
-        <div className="flex-1 max-w-2xl">
-          <div className="relative">
-            <MaterialIcon name="search" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-200" />
-            <input
-              type="text"
-              placeholder="Buscar salas, compromissos ou pessoas"
-              className="w-full pl-10 pr-4 py-2.5 bg-white/95 border border-blue-500 rounded-lg text-sm text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-white focus:border-white focus:bg-white"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4 ml-6">
+        <div className="flex items-center gap-4 ml-auto">
           {/* Email Sync Status - CORREÇÃO 1: Material Icon */}
           {emailSynced && (
             <div className="flex items-center gap-2 px-3 py-2 bg-white/95 border border-white rounded-lg">
